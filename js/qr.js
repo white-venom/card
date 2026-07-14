@@ -168,6 +168,12 @@ const QRManager = (() => {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, size, size);
 
+    // Update img tag immediately with the gradient (before logo loads)
+    const imgElement = canvas.parentElement.querySelector('img');
+    if (imgElement) {
+      imgElement.src = canvas.toDataURL('image/png');
+    }
+
     // 6. Draw central logo (source-over overlay)
     ctx.globalCompositeOperation = 'source-over';
     const logo = new Image();
@@ -190,6 +196,11 @@ const QRManager = (() => {
 
       // Draw the actual Xenelasia logo
       ctx.drawImage(logo, x, y, logoSize, logoSize);
+
+      // Update img tag again once logo loads
+      if (imgElement) {
+        imgElement.src = canvas.toDataURL('image/png');
+      }
     };
   }
 
