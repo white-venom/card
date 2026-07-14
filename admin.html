@@ -1101,9 +1101,6 @@
       const outputArea = document.getElementById('json-output');
       outputArea.value = `,\n${cleanedJson}`;
       
-      document.getElementById('output-wrapper').style.display = 'block';
-      document.getElementById('output-wrapper').scrollIntoView({ behavior: 'smooth' });
-      
       document.getElementById('copy-json-btn').onclick = () => {
         copyText(outputArea.value, 'JSON Code copied!');
       };
@@ -1142,7 +1139,24 @@
         cancelEditBtn.style.display = 'none';
       }
 
-      showToast(`🎉 Success! Saved card & generated QR code for ${savedName}!`);
+      // Show output panel first
+      document.getElementById('output-wrapper').style.display = 'block';
+      document.getElementById('output-wrapper').scrollIntoView({ behavior: 'smooth' });
+
+      // ── Auto-deploy to GitHub ──────────────────────────────────────────
+      if (getGithubPAT()) {
+        // Token is configured → push automatically
+        showToast(`✅ Saved ${savedName}! Deploying to GitHub…`);
+        setTimeout(() => pushToGitHub(), 400); // slight delay so UI settles first
+      } else {
+        // Token NOT configured → prompt once
+        showToast(`✅ Saved ${savedName} locally!`);
+        const statusEl = document.getElementById('push-status');
+        statusEl.style.display = 'block';
+        statusEl.style.background = 'rgba(251,191,36,0.12)';
+        statusEl.style.color = '#fbbf24';
+        statusEl.innerHTML = `⚠️ <strong>One-time setup needed:</strong> Click <strong>⚙️ Configure</strong> at the top to add your GitHub token — you only do this once, and changes will auto-deploy forever after.`;
+      }
     });
   </script>
 </body>
