@@ -234,16 +234,21 @@ async function copyToClipboard(text, label = 'Copied!') {
 
 /* ─── Copy Contact Details Button ───────────────────────────── */
 document.getElementById('copy-contact-btn')?.addEventListener('click', function () {
-  const details = `Kartik Verma\nTech Expert — Xenelasia Consultancy\n📞 +91 8126338976\n✉ kartik.verma.cs@gmail.com\n🌐 xcplllp.com\n📍 1908, Iconic Corenthum Tower, Sector 62, Noida`;
-  copyToClipboard(details, 'Contact details copied!');
+  if (window.activeEmployee) {
+    const emp = window.activeEmployee;
+    const details = `${emp.fullName}\n${emp.designation} — ${emp.company}\n📞 ${emp.phoneFormatted}\n✉ ${emp.email}\n🌐 ${emp.website}\n📍 ${emp.address.street}, ${emp.address.city}`;
+    copyToClipboard(details, 'Contact details copied!');
+  }
   addRipple(this);
 });
 
 /* ─── Share Button ──────────────────────────────────────────── */
 document.getElementById('share-btn')?.addEventListener('click', async function () {
+  if (!window.activeEmployee) return;
+  const emp = window.activeEmployee;
   const shareData = {
-    title: 'Kartik Verma — Tech Expert | Xenelasia Consultancy',
-    text:  'Connect with Kartik Verma, Tech Expert at Xenelasia Consultancy. AI, Cybersecurity & Digital Transformation.',
+    title: `${emp.fullName} — ${emp.designation} | ${emp.company}`,
+    text:  `Connect with ${emp.fullName}, ${emp.designation} at ${emp.company}.`,
     url:   window.location.href,
   };
 
@@ -316,16 +321,25 @@ function addShineOverlays() {
 
 /* ─── Contact item click handlers ───────────────────────────── */
 function initContactInteractions() {
-  document.getElementById('phone-card')?.addEventListener('click', () => {
-    window.location.href = 'tel:+918126338976';
+  document.getElementById('phone-card')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.activeEmployee) {
+      window.location.href = `tel:${window.activeEmployee.phone}`;
+    }
   });
 
-  document.getElementById('email-card')?.addEventListener('click', () => {
-    window.location.href = 'mailto:kartik.verma.cs@gmail.com';
+  document.getElementById('email-card')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.activeEmployee) {
+      window.location.href = `mailto:${window.activeEmployee.email}`;
+    }
   });
 
-  document.getElementById('website-card')?.addEventListener('click', () => {
-    window.open('https://xcplllp.com', '_blank', 'noopener noreferrer');
+  document.getElementById('website-card')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.activeEmployee) {
+      window.open(`https://${window.activeEmployee.website}`, '_blank', 'noopener noreferrer');
+    }
   });
 }
 
@@ -354,8 +368,198 @@ function initProfileFallback() {
   img.src = src;
 }
 
+/* ─── Load Employee Data Dynamically ───────────────────────── */
+let activeEmployee = null;
+
+async function loadEmployeeData() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userKey = urlParams.get('user') || 'kartik';
+
+  try {
+    const response = await fetch('data/employees.json');
+    const data = await response.json();
+    activeEmployee = data[userKey.toLowerCase()] || data['kartik'];
+  } catch (error) {
+    console.error('Error loading employee data, using fallback:', error);
+    // Hardcoded fallback for Kartik
+    activeEmployee = {
+      firstName: "Kartik",
+      lastName: "Verma",
+      fullName: "Kartik Verma",
+      designation: "Tech Expert",
+      company: "Xenelasia Consultancy",
+      bio: "Helping businesses leverage technology, AI, cybersecurity, cloud solutions, and digital transformation to build smarter and more secure systems.",
+      phone: "+918126338976",
+      phoneFormatted: "+91 81263 38976",
+      email: "kartik.verma.cs@gmail.com",
+      website: "xcplllp.com",
+      linkedin: "https://www.linkedin.com/in/kartik-verma-9a5776297/",
+      address: {
+        street: "1908, Iconic Corenthum Tower",
+        city: "Sector 62, Noida",
+        state: "Uttar Pradesh",
+        country: "India",
+        postal: "201309"
+      },
+      skills: [
+        { "icon": "🤖", "name": "Artificial Intelligence" },
+        { "icon": "🔐", "name": "Cyber Security" },
+        { "icon": "💻", "name": "Web Development" },
+        { "icon": "⚡", "name": "Automation" },
+        { "icon": "🚀", "name": "Digital Transformation" }
+      ],
+      services: [
+        { "icon": "🤖", "name": "AI Solutions" },
+        { "icon": "💻", "name": "Software Development" },
+        { "icon": "🛡️", "name": "Cyber Security" }
+      ],
+      profileImg: "assets/profile/profile.jpg",
+      initials: "KV"
+    };
+  }
+
+  window.activeEmployee = activeEmployee;
+
+  // 1. Populate Text fields
+  document.getElementById('profile-name').textContent = activeEmployee.fullName;
+  document.getElementById('profile-designation').textContent = activeEmployee.designation;
+  document.getElementById('profile-bio').textContent = activeEmployee.bio;
+
+  // 2. Profile image and initials fallback
+  const img = document.getElementById('profile-img');
+  const initialsDiv = document.getElementById('profile-initials');
+  if (img && initialsDiv) {
+    initialsDiv.textContent = activeEmployee.initials;
+    initialsDiv.setAttribute('data-initials', activeEmployee.initials);
+    img.alt = `${activeEmployee.fullName} profile photo`;
+    img.src = activeEmployee.profileImg;
+  }
+
+  // 3. Contact information
+  const phoneVal = document.getElementById('phone-value');
+  if (phoneVal) phoneVal.textContent = activeEmployee.phoneFormatted;
+  const emailVal = document.getElementById('email-value');
+  if (emailVal) emailVal.textContent = activeEmployee.email;
+  const webVal = document.getElementById('website-value');
+  if (webVal) webVal.textContent = activeEmployee.website;
+  const addrVal = document.getElementById('address-value');
+  if (addrVal) addrVal.textContent = `${activeEmployee.address.street}, ${activeEmployee.address.city}, ${activeEmployee.address.state}`;
+
+  // Update contact card href links
+  const phoneCard = document.getElementById('phone-card');
+  if (phoneCard) phoneCard.href = `tel:${activeEmployee.phone}`;
+  const emailCard = document.getElementById('email-card');
+  if (emailCard) emailCard.href = `mailto:${activeEmployee.email}`;
+  const webCard = document.getElementById('website-card');
+  if (webCard) webCard.href = `https://${activeEmployee.website}`;
+  const addrCard = document.getElementById('address-card');
+  if (addrCard) addrCard.href = `https://maps.google.com/?q=${encodeURIComponent(`${activeEmployee.address.street} ${activeEmployee.address.city}`)}`;
+
+  // 4. Skills
+  const skillsGrid = document.getElementById('skills-grid');
+  if (skillsGrid) {
+    skillsGrid.innerHTML = '';
+    activeEmployee.skills.forEach(skill => {
+      const chip = document.createElement('div');
+      chip.className = 'skill-chip';
+      chip.setAttribute('role', 'listitem');
+      chip.innerHTML = `<span aria-hidden="true">${skill.icon}</span><span>${skill.name}</span>`;
+      skillsGrid.appendChild(chip);
+    });
+  }
+
+  // 5. Services
+  const servicesGrid = document.getElementById('services-grid');
+  if (servicesGrid) {
+    servicesGrid.innerHTML = '';
+    activeEmployee.services.forEach(service => {
+      const card = document.createElement('article');
+      card.className = 'service-card';
+      card.setAttribute('role', 'listitem');
+      card.innerHTML = `
+        <div class="service-icon" aria-hidden="true">${service.icon}</div>
+        <span class="service-name">${service.name}</span>
+      `;
+      servicesGrid.appendChild(card);
+    });
+  }
+
+  // 6. Social Links
+  const socialGrid = document.getElementById('social-grid');
+  if (socialGrid) {
+    socialGrid.innerHTML = '';
+
+    // List of supported social profiles
+    const socials = [
+      {
+        key: 'linkedin',
+        name: 'LinkedIn',
+        class: 'social-btn--linkedin',
+        svg: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2" y="9" width="4" height="12" stroke="currentColor" stroke-width="2"/><circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="2"/></svg>`
+      },
+      {
+        key: 'github',
+        name: 'GitHub',
+        class: 'social-btn--github',
+        svg: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      },
+      {
+        key: 'email',
+        name: 'Email',
+        class: 'social-btn--email',
+        svg: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/></svg>`
+      },
+      {
+        key: 'whatsapp',
+        name: 'WhatsApp',
+        class: 'social-btn--whatsapp',
+        svg: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      }
+    ];
+
+    socials.forEach(social => {
+      let value = '';
+      if (social.key === 'email') {
+        value = `mailto:${activeEmployee.email}`;
+      } else if (activeEmployee[social.key]) {
+        value = activeEmployee[social.key];
+      }
+
+      if (value) {
+        const btn = document.createElement('a');
+        btn.className = `social-btn ${social.class}`;
+        btn.href = value;
+        btn.target = social.key === 'email' ? '_self' : '_blank';
+        btn.setAttribute('rel', 'noopener noreferrer');
+        btn.setAttribute('role', 'listitem');
+        btn.setAttribute('aria-label', `${social.name} profile`);
+        btn.innerHTML = `
+          <div class="social-icon-wrap">
+            ${social.svg}
+          </div>
+          <span class="social-label">${social.name}</span>
+        `;
+        socialGrid.appendChild(btn);
+      }
+    });
+  }
+
+  // 7. Update SEO Meta & Page titles dynamically
+  document.title = `${activeEmployee.fullName} — ${activeEmployee.designation} | ${activeEmployee.company}`;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+    metaDesc.setAttribute('content', `${activeEmployee.fullName}, ${activeEmployee.designation} at ${activeEmployee.company}. ${activeEmployee.bio}`);
+  }
+
+  // 8. Dispatch event to notify qr.js and contact.js
+  document.dispatchEvent(new CustomEvent('employeeLoaded', { detail: activeEmployee }));
+}
+
 /* ─── Initialise Everything ─────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load employee data first
+  await loadEmployeeData();
+
   // Page enter
   document.body.classList.add('loaded');
 

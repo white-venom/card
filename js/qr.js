@@ -16,7 +16,7 @@ const QRManager = (() => {
    * Generate QR using the QRCode library (qrcode.js CDN).
    * If unavailable, fallback to a QR API.
    */
-  function generate() {
+  function generate(employee) {
     const url = window.location.href;
     const container = document.getElementById(CONTAINER_ID);
     if (!container) return;
@@ -47,7 +47,7 @@ const QRManager = (() => {
 
     // Add local testing tips
     const isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname) || window.location.protocol === 'file:';
-    if (isLocal) {
+    if (isLocal && employee) {
       const infoBox = document.createElement('div');
       infoBox.style.marginTop = '15px';
       infoBox.style.padding = '10px';
@@ -58,11 +58,13 @@ const QRManager = (() => {
       infoBox.style.color = 'var(--text-secondary)';
       infoBox.style.textAlign = 'left';
       infoBox.style.lineHeight = '1.4';
+      
+      const username = employee.firstName.toLowerCase();
       infoBox.innerHTML = `
         <span style="font-weight:700; color:var(--coral);">💡 Local Test Mode</span><br>
         1. Both PC and phone must be on the same Wi-Fi.<br>
         2. Access the site on your PC via your IP address:<br>
-        <code style="background:rgba(255,255,255,0.1); padding:2px 4px; border-radius:3px; font-family:monospace; display:block; margin:4px 0; word-break:break-all;">http://192.168.1.23:8000/</code>
+        <code style="background:rgba(255,255,255,0.1); padding:2px 4px; border-radius:3px; font-family:monospace; display:block; margin:4px 0; word-break:break-all;">http://192.168.1.23:8000/?user=${username}</code>
         Then scan the regenerated QR. When deployed, it links to your domain automatically.
       `;
       container.appendChild(infoBox);
@@ -76,11 +78,14 @@ const QRManager = (() => {
     const container = document.getElementById(CONTAINER_ID);
     if (!container) return;
 
+    const name = window.activeEmployee ? window.activeEmployee.firstName.toLowerCase() : 'employee';
+    const filename = `${name}-qr.png`;
+
     // Try canvas (qrcode.js generates a canvas)
     const canvas = container.querySelector('canvas');
     if (canvas) {
       const link = document.createElement('a');
-      link.download = 'kartik-verma-qr.png';
+      link.download = filename;
       link.href     = canvas.toDataURL('image/png');
       link.click();
       return;
@@ -94,7 +99,7 @@ const QRManager = (() => {
         const blob     = await response.blob();
         const blobUrl  = URL.createObjectURL(blob);
         const link     = document.createElement('a');
-        link.download  = 'kartik-verma-qr.png';
+        link.download  = filename;
         link.href      = blobUrl;
         link.click();
         URL.revokeObjectURL(blobUrl);
@@ -106,10 +111,17 @@ const QRManager = (() => {
   }
 
   function init() {
-    generate();
+    // Generate initially once event triggers
+    document.addEventListener('employeeLoaded', (e) => {
+      generate(e.detail);
+    });
 
     // Re-generate if URL changes (for SPA-like behaviour)
-    window.addEventListener('popstate', generate);
+    window.addEventListener('popstate', () => {
+      if (window.activeEmployee) {
+        generate(window.activeEmployee);
+      }
+    });
 
     DOWNLOAD_BTN?.addEventListener('click', () => {
       downloadQR();
