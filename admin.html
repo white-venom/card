@@ -300,6 +300,36 @@
       <div class="section-line"></div>
     </div>
     
+    <!-- GitHub Auto-Deploy Settings -->
+    <div id="github-settings-card" class="glass-card animate-glow" style="margin-bottom: var(--space-6); padding: var(--space-5);">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h3 style="font-size:1rem; font-weight:800; margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+            🚀 GitHub Auto-Deploy
+            <span id="github-status-badge" style="font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,0.08); color:var(--text-secondary);">Not Configured</span>
+          </h3>
+          <p style="font-size:0.75rem; color:var(--text-secondary); margin:0;">Store your GitHub token once. Changes will push live automatically — no manual file uploads needed.</p>
+        </div>
+        <button id="toggle-github-settings-btn" type="button" class="btn btn--glass" style="font-size:0.75rem; padding:var(--space-2) var(--space-4); white-space:nowrap;">⚙️ Configure</button>
+      </div>
+
+      <div id="github-settings-form" style="display:none; margin-top:var(--space-4); border-top:1px solid var(--glass-border); padding-top:var(--space-4);">
+        <div style="display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end;">
+          <div class="form-group" style="margin:0;">
+            <label for="github-pat-input" style="font-size:0.75rem;">GitHub Personal Access Token (PAT)</label>
+            <input type="password" id="github-pat-input" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+            <p style="font-size:0.68rem; color:var(--text-secondary); margin-top:6px; line-height:1.4;">
+              Create a token at <a href="https://github.com/settings/tokens/new?scopes=repo&description=XenelasiaCardAdmin" target="_blank" style="color:var(--coral);">github.com/settings/tokens</a> with <strong>repo</strong> scope. It's stored only in your browser.
+            </p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px; padding-bottom:34px;">
+            <button id="save-github-pat-btn" type="button" class="btn btn--primary" style="font-size:0.75rem; padding:var(--space-2) var(--space-4); white-space:nowrap;">Save Token</button>
+            <button id="clear-github-pat-btn" type="button" class="btn btn--glass" style="font-size:0.75rem; padding:var(--space-2) var(--space-4); white-space:nowrap; color:var(--coral);">Clear Token</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="admin-grid">
       
       <!-- Left side: Employee Cards List and Links -->
@@ -436,26 +466,14 @@
       <div id="output-wrapper" style="display:none; margin-top:var(--space-6);">
         <label for="json-output" style="font-weight:700; color:var(--text-primary);">Employee JSON Block:</label>
         <textarea id="json-output" class="form-control json-output" readonly></textarea>
-        <div style="display:flex; gap:12px; margin-top:var(--space-3); flex-wrap:wrap;">
-          <button id="copy-json-btn" class="btn btn--glass" style="font-size:0.8rem; padding:var(--space-2) var(--space-4);">Copy Code</button>
-          <button id="download-full-json-btn" class="btn btn--primary" style="font-size:0.8rem; padding:var(--space-2) var(--space-4); background: linear-gradient(135deg, #3B82F6 0%, #7B2FBE 100%);">Download employees.json</button>
+        <div style="display:flex; gap:12px; margin-top:var(--space-3); flex-wrap:wrap; align-items:center;">
+          <button id="copy-json-btn" class="btn btn--glass" style="font-size:0.8rem; padding:var(--space-2) var(--space-4);">📋 Copy Code</button>
+          <button id="download-full-json-btn" class="btn btn--glass" style="font-size:0.8rem; padding:var(--space-2) var(--space-4);">⬇️ Download .json</button>
+          <button id="push-github-btn" class="btn btn--primary" style="font-size:0.85rem; padding:var(--space-2) var(--space-5); background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); flex:1; justify-content:center; min-width:200px;">
+            🚀 Push to GitHub &amp; Deploy Live
+          </button>
         </div>
-
-        <!-- Dynamic Instructions to Update GitHub -->
-        <div id="github-instructions" style="margin-top: var(--space-6); padding: var(--space-5); background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: var(--radius-md); text-align: left;">
-          <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:var(--space-2); color:var(--text-primary); display:flex; align-items:center; gap:6px;">
-            🌐 How to save changes permanently for everyone:
-          </h4>
-          <p style="font-size:0.78rem; color:var(--text-secondary); line-height:1.5; margin-bottom:var(--space-4);">
-            Changes you make here are saved in your current browser session for testing. To update the website for everyone (including mobile scans and client views), follow these easy steps:
-          </p>
-          <ol style="font-size:0.78rem; color:var(--text-secondary); margin-left:var(--space-4); display:flex; flex-direction:column; gap:10px; line-height:1.5; padding-left:12px;">
-            <li>Click the blue <strong>"Download employees.json"</strong> button above to save the updated config.</li>
-            <li>Go directly to your GitHub repository folder here: <a href="https://github.com/white-venom/card/tree/main/data" target="_blank" style="color:var(--coral); text-decoration:underline; font-weight:700;">GitHub Data Folder 🔗</a>.</li>
-            <li>Drag and drop the downloaded <code>employees.json</code> file into the browser window to upload it.</li>
-            <li>Click the green <strong>"Commit changes..."</strong> button. Vercel will automatically update the website live in 10 seconds!</li>
-          </ol>
-        </div>
+        <div id="push-status" style="display:none; margin-top:var(--space-3); padding:var(--space-3) var(--space-4); border-radius:var(--radius-md); font-size:0.8rem; font-weight:600;"></div>
       </div>
     </div>
   </main>
@@ -508,6 +526,165 @@
     const selectEl = document.getElementById('employee-select');
     const qrContainer = document.getElementById('qr-container');
     const downloadBtn = document.getElementById('download-qr-btn');
+
+    // ── GitHub Auto-Deploy Config ─────────────────────────────────────────
+    const GITHUB_REPO  = 'white-venom/card';
+    const GITHUB_FILE  = 'data/employees.json';
+    const GITHUB_BRANCH = 'main';
+
+    function getGithubPAT() {
+      return localStorage.getItem('github_pat') || '';
+    }
+
+    function updateGitHubStatusBadge() {
+      const badge = document.getElementById('github-status-badge');
+      if (!badge) return;
+      const pat = getGithubPAT();
+      if (pat) {
+        badge.textContent = '✅ Token Saved';
+        badge.style.background = 'rgba(34,197,94,0.15)';
+        badge.style.color = '#4ade80';
+      } else {
+        badge.textContent = 'Not Configured';
+        badge.style.background = 'rgba(255,255,255,0.08)';
+        badge.style.color = 'var(--text-secondary)';
+      }
+    }
+
+    // Toggle settings form
+    const toggleGHBtn = document.getElementById('toggle-github-settings-btn');
+    const githubSettingsForm = document.getElementById('github-settings-form');
+    const githubPatInput = document.getElementById('github-pat-input');
+    if (toggleGHBtn && githubSettingsForm) {
+      toggleGHBtn.addEventListener('click', () => {
+        const isVisible = githubSettingsForm.style.display !== 'none';
+        githubSettingsForm.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible && getGithubPAT()) {
+          githubPatInput.value = getGithubPAT();
+        }
+      });
+    }
+
+    // Save PAT
+    const saveGHPatBtn = document.getElementById('save-github-pat-btn');
+    if (saveGHPatBtn) {
+      saveGHPatBtn.addEventListener('click', () => {
+        const val = githubPatInput.value.trim();
+        if (!val.startsWith('ghp_') && !val.startsWith('github_pat_')) {
+          showToast('⚠️ Invalid token format. Should start with ghp_ or github_pat_');
+          return;
+        }
+        localStorage.setItem('github_pat', val);
+        githubSettingsForm.style.display = 'none';
+        updateGitHubStatusBadge();
+        showToast('✅ GitHub token saved! Auto-deploy is now active.');
+      });
+    }
+
+    // Clear PAT
+    const clearGHPatBtn = document.getElementById('clear-github-pat-btn');
+    if (clearGHPatBtn) {
+      clearGHPatBtn.addEventListener('click', () => {
+        localStorage.removeItem('github_pat');
+        if (githubPatInput) githubPatInput.value = '';
+        updateGitHubStatusBadge();
+        showToast('🗑️ GitHub token cleared.');
+      });
+    }
+
+    // Init badge on page load
+    updateGitHubStatusBadge();
+
+    // ── GitHub Push Function ──────────────────────────────────────────────
+    async function pushToGitHub() {
+      const pat = getGithubPAT();
+      if (!pat) {
+        showToast('⚠️ No GitHub token set. Click ⚙️ Configure above to add one.');
+        document.getElementById('github-settings-card').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      const pushBtn = document.getElementById('push-github-btn');
+      const statusEl = document.getElementById('push-status');
+      pushBtn.disabled = true;
+      pushBtn.textContent = '⏳ Pushing to GitHub...';
+      statusEl.style.display = 'block';
+      statusEl.style.background = 'rgba(59,130,246,0.12)';
+      statusEl.style.color = '#93c5fd';
+      statusEl.textContent = '📡 Connecting to GitHub API…';
+
+      try {
+        const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+        const headers = {
+          'Authorization': `Bearer ${pat}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        };
+
+        // Step 1: Get current file SHA (required for update)
+        statusEl.textContent = '🔍 Fetching current file SHA…';
+        const getRes = await fetch(`${apiBase}?ref=${GITHUB_BRANCH}`, { headers });
+        if (!getRes.ok) {
+          const err = await getRes.json();
+          throw new Error(err.message || `GitHub GET failed: ${getRes.status}`);
+        }
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Step 2: Build full updated config
+        const fullConfig = {
+          companyServices: companyServicesData,
+          employees: employeesData
+        };
+        const jsonStr = JSON.stringify(fullConfig, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        // Step 3: PUT updated file
+        statusEl.textContent = '🚀 Uploading updated database…';
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            message: `Admin update: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`,
+            content: base64Content,
+            sha,
+            branch: GITHUB_BRANCH
+          })
+        });
+
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          throw new Error(err.message || `GitHub PUT failed: ${putRes.status}`);
+        }
+
+        // Success!
+        statusEl.style.background = 'rgba(34,197,94,0.12)';
+        statusEl.style.color = '#4ade80';
+        statusEl.textContent = '✅ Pushed successfully! Vercel is deploying… (~10 seconds)';
+        pushBtn.textContent = '✅ Deployed!';
+        showToast('🎉 Live on Vercel in ~10 seconds!');
+
+        setTimeout(() => {
+          pushBtn.disabled = false;
+          pushBtn.textContent = '🚀 Push to GitHub & Deploy Live';
+        }, 12000);
+
+      } catch (err) {
+        console.error('GitHub push failed:', err);
+        statusEl.style.background = 'rgba(239,68,68,0.12)';
+        statusEl.style.color = '#f87171';
+        statusEl.textContent = `❌ Error: ${err.message}`;
+        pushBtn.disabled = false;
+        pushBtn.textContent = '🚀 Push to GitHub & Deploy Live';
+        showToast(`❌ Push failed: ${err.message}`);
+      }
+    }
+
+    // Wire up push button
+    const pushGithubBtn = document.getElementById('push-github-btn');
+    if (pushGithubBtn) {
+      pushGithubBtn.addEventListener('click', pushToGitHub);
+    }
     
     // Copy toast helper
     function showToast(message) {
