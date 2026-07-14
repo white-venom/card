@@ -314,6 +314,9 @@
           <select id="employee-select">
             <option value="">Loading profiles...</option>
           </select>
+          <button id="edit-employee-btn" type="button" class="btn btn--primary" style="margin-top:var(--space-3); width: 100%; justify-content: center; display: none; background: linear-gradient(135deg, #FF4D6D 0%, #D63AF9 100%);">
+            ✏️ Edit Selected Profile
+          </button>
         </div>
         
         <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: var(--space-5) 0;">
@@ -357,10 +360,9 @@
       
     </div>
     
-    <!-- Profile Generator Form -->
     <div class="glass-card admin-card" style="margin-top:var(--space-8);">
-      <h2 style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-2);">Profile JSON Generator</h2>
-      <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:var(--space-6);">Create new employee profile configs to copy-paste into <code>data/employees.json</code></p>
+      <h2 id="form-title-header" style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-2);">Add an Xenelasian</h2>
+      <p id="form-desc-header" style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:var(--space-6);">Configure a team member's digital card details</p>
       
       <form id="profile-form">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);">
@@ -424,7 +426,10 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn--primary" style="margin-top:var(--space-4);">Generate JSON Block</button>
+        <div style="display:flex; gap:12px; margin-top:var(--space-4);">
+          <button type="submit" id="form-submit-btn" class="btn btn--primary" style="flex:1; justify-content:center;">Add an Xenelasian</button>
+          <button type="button" id="cancel-edit-btn" class="btn btn--glass" style="display:none; flex:1; justify-content:center;">Cancel Edit</button>
+        </div>
       </form>
       
       <!-- Output Area -->
@@ -568,6 +573,8 @@
         selectEl.innerHTML = '<option value="">Error loading config</option>';
       });
 
+    const editEmployeeBtn = document.getElementById('edit-employee-btn');
+
     // Select change logic
     selectEl.addEventListener('change', (e) => {
       const key = e.target.value;
@@ -575,6 +582,7 @@
       
       if (!key) {
         linksContainer.style.display = 'none';
+        editEmployeeBtn.style.display = 'none';
         qrContainer.innerHTML = 'Select an employee';
         downloadBtn.style.display = 'none';
         return;
@@ -582,6 +590,7 @@
       
       const emp = employeesData[key];
       linksContainer.style.display = 'block';
+      editEmployeeBtn.style.display = 'inline-block';
       
       // Calculate URLs
       const loc = window.location;
@@ -752,6 +761,70 @@
     // Initial render
     renderBuilderSkills();
 
+    // Edit state variables
+    let isEditMode = false;
+    let editKey = '';
+
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const formTitleHeader = document.getElementById('form-title-header');
+    const formDescHeader = document.getElementById('form-desc-header');
+    const formSubmitBtn = document.getElementById('form-submit-btn');
+
+    // Edit Selected Profile button action
+    if (editEmployeeBtn) {
+      editEmployeeBtn.addEventListener('click', () => {
+        const key = selectEl.value;
+        if (!key) return;
+
+        const emp = employeesData[key];
+        isEditMode = true;
+        editKey = key;
+
+        // Prefill form inputs
+        document.getElementById('gen-first').value = emp.firstName || '';
+        document.getElementById('gen-last').value = emp.lastName || '';
+        document.getElementById('gen-title').value = emp.designation || '';
+        document.getElementById('gen-phone').value = emp.phone || '';
+        document.getElementById('gen-phone-format').value = emp.phoneFormatted || '';
+        document.getElementById('gen-email').value = emp.email || '';
+        document.getElementById('gen-linkedin').value = emp.linkedin || '';
+        document.getElementById('gen-website').value = emp.website || 'xcplllp.com';
+
+        // Load custom skills
+        generatedSkills = emp.skills ? [...emp.skills] : [];
+        renderBuilderSkills();
+
+        // Update headers and display cancel button
+        formTitleHeader.textContent = `Edit Profile: ${emp.fullName}`;
+        formDescHeader.textContent = 'Updating existing card configuration in local memory.';
+        formSubmitBtn.textContent = 'Save Changes';
+        cancelEditBtn.style.display = 'inline-block';
+
+        // Scroll the form into view smoothly
+        document.getElementById('profile-form').scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    // Cancel edit button action
+    if (cancelEditBtn) {
+      cancelEditBtn.addEventListener('click', () => {
+        isEditMode = false;
+        editKey = '';
+
+        // Restore titles and submit button text
+        formTitleHeader.textContent = 'Add an Xenelasian';
+        formDescHeader.textContent = "Configure a team member's digital card details";
+        formSubmitBtn.textContent = 'Add an Xenelasian';
+        cancelEditBtn.style.display = 'none';
+
+        // Reset the form
+        document.getElementById('profile-form').reset();
+        document.getElementById('gen-website').value = 'xcplllp.com';
+        generatedSkills = [];
+        renderBuilderSkills();
+      });
+    }
+
     // Profile JSON Generator
     document.getElementById('profile-form').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -765,7 +838,7 @@
       const linkedin = document.getElementById('gen-linkedin').value.trim();
       const website = document.getElementById('gen-website').value.trim();
       
-      const key = first.toLowerCase();
+      const key = isEditMode ? editKey : first.toLowerCase();
       const initials = (first.charAt(0) + last.charAt(0)).toUpperCase();
       
       // Auto-generate a beautiful bio using their designation
@@ -843,7 +916,19 @@
       generatedSkills = [];
       renderBuilderSkills();
 
-      showToast(`🎉 Success! Saved card & generated QR code for ${newProfile.fullName}!`);
+      const savedName = newProfile.fullName;
+
+      // Reset edit state if in edit mode
+      if (isEditMode) {
+        isEditMode = false;
+        editKey = '';
+        formTitleHeader.textContent = 'Add an Xenelasian';
+        formDescHeader.textContent = "Configure a team member's digital card details";
+        formSubmitBtn.textContent = 'Add an Xenelasian';
+        cancelEditBtn.style.display = 'none';
+      }
+
+      showToast(`🎉 Success! Saved card & generated QR code for ${savedName}!`);
     });
   </script>
 </body>
