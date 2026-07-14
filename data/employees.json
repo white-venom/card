@@ -127,6 +127,39 @@
       ],
       "profileImg": "assets/profile/shashank.jpg",
       "initials": "SS"
+    },
+    "sujeet": {
+      "firstName": "Sujeet",
+      "lastName": "Kansal",
+      "fullName": "Sujeet Kansal",
+      "designation": "Tech Expert",
+      "company": "Xenelasia Consultancy",
+      "bio": "Helping businesses leverage technology, AI, automation, and digital transformation in Tech Expert strategies.",
+      "phone": "9917128864",
+      "phoneFormatted": "+91 99171 28864",
+      "email": "kansalsujeetdps@gmail.com",
+      "website": "xcplllp.com",
+      "linkedin": "https://www.linkedin.com/in/kansalsujeet5310/",
+      "whatsapp": "https://wa.me/9917128864",
+      "address": {
+        "street": "1908, Iconic Corenthum Tower",
+        "city": "Sector 62, Noida",
+        "state": "Uttar Pradesh",
+        "country": "India",
+        "postal": "201309"
+      },
+      "skills": [
+        {
+          "icon": "⚡",
+          "name": "AI"
+        },
+        {
+          "icon": "⚡",
+          "name": "Cybersecurity"
+        }
+      ],
+      "profileImg": "assets/profile/sujeet.jpg",
+      "initials": "SK"
     }
   }
 }
