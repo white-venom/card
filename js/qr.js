@@ -177,7 +177,6 @@ const QRManager = (() => {
     // 6. Draw central logo (source-over overlay)
     ctx.globalCompositeOperation = 'source-over';
     const logo = new Image();
-    logo.src = 'assets/logo/logo.webp';
     logo.onload = () => {
       const logoSize = size * 0.22; // 22% of QR width
       const x = (size - logoSize) / 2;
@@ -202,6 +201,7 @@ const QRManager = (() => {
         imgElement.src = canvas.toDataURL('image/png');
       }
     };
+    logo.src = 'assets/logo/logo.webp';
   }
 
   function init() {
