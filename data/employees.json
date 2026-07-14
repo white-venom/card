@@ -1,12 +1,33 @@
 {
   "companyServices": [
-    { "icon": "🤖", "name": "AI Solutions" },
-    { "icon": "💻", "name": "Software Development" },
-    { "icon": "🛡️", "name": "Cyber Security" },
-    { "icon": "📊", "name": "Digital Consulting" },
-    { "icon": "⚙️", "name": "Automation" },
-    { "icon": "📱", "name": "Business Technology" },
-    { "icon": "🏗️", "name": "IT Infrastructure" }
+    {
+      "icon": "🤖",
+      "name": "AI Solutions"
+    },
+    {
+      "icon": "💻",
+      "name": "Software Development"
+    },
+    {
+      "icon": "🛡️",
+      "name": "Cyber Security"
+    },
+    {
+      "icon": "📊",
+      "name": "Digital Consulting"
+    },
+    {
+      "icon": "⚙️",
+      "name": "Automation"
+    },
+    {
+      "icon": "📱",
+      "name": "Business Technology"
+    },
+    {
+      "icon": "🏗️",
+      "name": "IT Infrastructure"
+    }
   ],
   "employees": {
     "kartik": {
@@ -15,10 +36,10 @@
       "fullName": "Kartik Verma",
       "designation": "Tech Expert",
       "company": "Xenelasia Consultancy",
-      "bio": "Helping businesses leverage technology, AI, cybersecurity, cloud solutions, and digital transformation to build smarter and more secure systems.",
+      "bio": "Helping businesses leverage technology, AI, automation, and digital transformation in Tech Expert strategies.",
       "phone": "+918126338976",
       "phoneFormatted": "+91 81263 38976",
-      "email": "kartik.verma.cs@gmail.com",
+      "email": "xcplllp@gmail.com",
       "website": "xcplllp.com",
       "linkedin": "https://www.linkedin.com/in/kartik-verma-9a5776297/",
       "whatsapp": "https://wa.me/918126338976",
@@ -30,15 +51,36 @@
         "postal": "201309"
       },
       "skills": [
-        { "icon": "🤖", "name": "Artificial Intelligence" },
-        { "icon": "🔐", "name": "Cyber Security" },
-        { "icon": "💻", "name": "Web Development" },
-        { "icon": "⚡", "name": "Automation" },
-        { "icon": "🚀", "name": "Digital Transformation" },
-        { "icon": "🌐", "name": "Networking" },
-        { "icon": "🎯", "name": "Consulting" }
+        {
+          "icon": "🤖",
+          "name": "Artificial Intelligence"
+        },
+        {
+          "icon": "🔐",
+          "name": "Cyber Security"
+        },
+        {
+          "icon": "💻",
+          "name": "Web Development"
+        },
+        {
+          "icon": "⚡",
+          "name": "Automation"
+        },
+        {
+          "icon": "🚀",
+          "name": "Digital Transformation"
+        },
+        {
+          "icon": "🌐",
+          "name": "Networking"
+        },
+        {
+          "icon": "🎯",
+          "name": "Consulting"
+        }
       ],
-      "profileImg": "assets/profile/profile.jpg",
+      "profileImg": "assets/profile/kartik.jpg",
       "initials": "KV"
     },
     "shashank": {
@@ -62,12 +104,30 @@
         "postal": "201309"
       },
       "skills": [
-        { "icon": "💼", "name": "Business Strategy" },
-        { "icon": "🎯", "name": "Strategic Consulting" },
-        { "icon": "🚀", "name": "Digital Transformation" },
-        { "icon": "🏗️", "name": "IT Strategy" },
-        { "icon": "🛡️", "name": "Risk Management" },
-        { "icon": "🤝", "name": "Partnerships" }
+        {
+          "icon": "💼",
+          "name": "Business Strategy"
+        },
+        {
+          "icon": "🎯",
+          "name": "Strategic Consulting"
+        },
+        {
+          "icon": "🚀",
+          "name": "Digital Transformation"
+        },
+        {
+          "icon": "🏗️",
+          "name": "IT Strategy"
+        },
+        {
+          "icon": "🛡️",
+          "name": "Risk Management"
+        },
+        {
+          "icon": "🤝",
+          "name": "Partnerships"
+        }
       ],
       "profileImg": "assets/profile/shashank.jpg",
       "initials": "SS"
