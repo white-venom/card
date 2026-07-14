@@ -314,14 +314,14 @@
     fetch('data/employees.json')
       .then(res => res.json())
       .then(data => {
-        employeesData = data;
+        employeesData = data.employees || {};
         
         // Populate select list
         selectEl.innerHTML = '<option value="">-- Choose employee --</option>';
-        Object.keys(data).forEach(key => {
+        Object.keys(employeesData).forEach(key => {
           const opt = document.createElement('option');
           opt.value = key;
-          opt.textContent = `${data[key].fullName} (${data[key].designation})`;
+          opt.textContent = `${employeesData[key].fullName} (${employeesData[key].designation})`;
           selectEl.appendChild(opt);
         });
       })
@@ -434,11 +434,6 @@
           { "icon": "💼", "name": "Management" },
           { "icon": "🎯", "name": "Consulting" },
           { "icon": "⚡", "name": "Automation" }
-        ],
-        "services": [
-          { "icon": "📊", "name": "Digital Consulting" },
-          { "icon": "⚙️", "name": "Automation" },
-          { "icon": "🛡️", "name": "Cyber Security" }
         ],
         "profileImg": `assets/profile/${key}.jpg`,
         "initials": initials

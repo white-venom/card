@@ -1,82 +1,76 @@
 {
-  "kartik": {
-    "firstName": "Kartik",
-    "lastName": "Verma",
-    "fullName": "Kartik Verma",
-    "designation": "Tech Expert",
-    "company": "Xenelasia Consultancy",
-    "bio": "Helping businesses leverage technology, AI, cybersecurity, cloud solutions, and digital transformation to build smarter and more secure systems.",
-    "phone": "+918126338976",
-    "phoneFormatted": "+91 81263 38976",
-    "email": "kartik.verma.cs@gmail.com",
-    "website": "xcplllp.com",
-    "linkedin": "https://www.linkedin.com/in/kartik-verma-9a5776297/",
-    "whatsapp": "https://wa.me/918126338976",
-    "address": {
-      "street": "1908, Iconic Corenthum Tower",
-      "city": "Sector 62, Noida",
-      "state": "Uttar Pradesh",
-      "country": "India",
-      "postal": "201309"
+  "companyServices": [
+    { "icon": "🤖", "name": "AI Solutions" },
+    { "icon": "💻", "name": "Software Development" },
+    { "icon": "🛡️", "name": "Cyber Security" },
+    { "icon": "📊", "name": "Digital Consulting" },
+    { "icon": "⚙️", "name": "Automation" },
+    { "icon": "📱", "name": "Business Technology" },
+    { "icon": "🏗️", "name": "IT Infrastructure" }
+  ],
+  "employees": {
+    "kartik": {
+      "firstName": "Kartik",
+      "lastName": "Verma",
+      "fullName": "Kartik Verma",
+      "designation": "Tech Expert",
+      "company": "Xenelasia Consultancy",
+      "bio": "Helping businesses leverage technology, AI, cybersecurity, cloud solutions, and digital transformation to build smarter and more secure systems.",
+      "phone": "+918126338976",
+      "phoneFormatted": "+91 81263 38976",
+      "email": "kartik.verma.cs@gmail.com",
+      "website": "xcplllp.com",
+      "linkedin": "https://www.linkedin.com/in/kartik-verma-9a5776297/",
+      "whatsapp": "https://wa.me/918126338976",
+      "address": {
+        "street": "1908, Iconic Corenthum Tower",
+        "city": "Sector 62, Noida",
+        "state": "Uttar Pradesh",
+        "country": "India",
+        "postal": "201309"
+      },
+      "skills": [
+        { "icon": "🤖", "name": "Artificial Intelligence" },
+        { "icon": "🔐", "name": "Cyber Security" },
+        { "icon": "💻", "name": "Web Development" },
+        { "icon": "⚡", "name": "Automation" },
+        { "icon": "🚀", "name": "Digital Transformation" },
+        { "icon": "🌐", "name": "Networking" },
+        { "icon": "🎯", "name": "Consulting" }
+      ],
+      "profileImg": "assets/profile/profile.jpg",
+      "initials": "KV"
     },
-    "skills": [
-      { "icon": "🤖", "name": "Artificial Intelligence" },
-      { "icon": "🔐", "name": "Cyber Security" },
-      { "icon": "💻", "name": "Web Development" },
-      { "icon": "⚡", "name": "Automation" },
-      { "icon": "🚀", "name": "Digital Transformation" },
-      { "icon": "🌐", "name": "Networking" },
-      { "icon": "🎯", "name": "Consulting" }
-    ],
-    "services": [
-      { "icon": "🤖", "name": "AI Solutions" },
-      { "icon": "💻", "name": "Software Development" },
-      { "icon": "🛡️", "name": "Cyber Security" },
-      { "icon": "📊", "name": "Digital Consulting" },
-      { "icon": "⚙️", "name": "Automation" },
-      { "icon": "📱", "name": "Business Technology" },
-      { "icon": "🏗️", "name": "IT Infrastructure" }
-    ],
-    "profileImg": "assets/profile/profile.jpg",
-    "initials": "KV"
-  },
-  "shashank": {
-    "firstName": "Shashank",
-    "lastName": "Singhal",
-    "fullName": "Shashank Singhal",
-    "designation": "Managing Partner",
-    "company": "Xenelasia Consultancy",
-    "bio": "Driving growth and innovation by helping enterprises navigate technology strategies, digital transformation, and strategic partnerships.",
-    "phone": "+918126338976",
-    "phoneFormatted": "+91 81263 38976",
-    "email": "shashank@xcplllp.com",
-    "website": "xcplllp.com",
-    "linkedin": "https://www.linkedin.com/in/shashank-singhal-xcp/",
-    "whatsapp": "https://wa.me/918126338976",
-    "address": {
-      "street": "1908, Iconic Corenthum Tower",
-      "city": "Sector 62, Noida",
-      "state": "Uttar Pradesh",
-      "country": "India",
-      "postal": "201309"
-    },
-    "skills": [
-      { "icon": "💼", "name": "Business Strategy" },
-      { "icon": "🎯", "name": "Strategic Consulting" },
-      { "icon": "🚀", "name": "Digital Transformation" },
-      { "icon": "🏗️", "name": "IT Strategy" },
-      { "icon": "🛡️", "name": "Risk Management" },
-      { "icon": "🤝", "name": "Partnerships" }
-    ],
-    "services": [
-      { "icon": "📊", "name": "Digital Consulting" },
-      { "icon": "🤖", "name": "AI Solutions" },
-      { "icon": "🛡️", "name": "Cyber Security" },
-      { "icon": "⚙️", "name": "Automation" },
-      { "icon": "📱", "name": "Business Technology" },
-      { "icon": "🏗️", "name": "IT Infrastructure" }
-    ],
-    "profileImg": "assets/profile/shashank.jpg",
-    "initials": "SS"
+    "shashank": {
+      "firstName": "Shashank",
+      "lastName": "Singhal",
+      "fullName": "Shashank Singhal",
+      "designation": "Managing Partner",
+      "company": "Xenelasia Consultancy",
+      "bio": "Driving growth and innovation by helping enterprises navigate technology strategies, digital transformation, and strategic partnerships.",
+      "phone": "+918010115618",
+      "phoneFormatted": "+91 8010115618",
+      "email": "shashank@xcplllp.com",
+      "website": "xcplllp.com",
+      "linkedin": "https://www.linkedin.com/in/shashank-singhal-xcp/",
+      "whatsapp": "https://wa.me/918010115618",
+      "address": {
+        "street": "1908, Iconic Corenthum Tower",
+        "city": "Sector 62, Noida",
+        "state": "Uttar Pradesh",
+        "country": "India",
+        "postal": "201309"
+      },
+      "skills": [
+        { "icon": "💼", "name": "Business Strategy" },
+        { "icon": "🎯", "name": "Strategic Consulting" },
+        { "icon": "🚀", "name": "Digital Transformation" },
+        { "icon": "🏗️", "name": "IT Strategy" },
+        { "icon": "🛡️", "name": "Risk Management" },
+        { "icon": "🤝", "name": "Partnerships" }
+      ],
+      "profileImg": "assets/profile/shashank.jpg",
+      "initials": "SS"
+    }
   }
 }

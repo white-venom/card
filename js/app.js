@@ -374,11 +374,13 @@ let activeEmployee = null;
 async function loadEmployeeData() {
   const urlParams = new URLSearchParams(window.location.search);
   const userKey = urlParams.get('user') || 'kartik';
+  let companyServices = [];
 
   try {
     const response = await fetch('data/employees.json');
     const data = await response.json();
-    activeEmployee = data[userKey.toLowerCase()] || data['kartik'];
+    activeEmployee = data.employees[userKey.toLowerCase()] || data.employees['kartik'];
+    companyServices = data.companyServices || [];
   } catch (error) {
     console.error('Error loading employee data, using fallback:', error);
     // Hardcoded fallback for Kartik
@@ -416,6 +418,7 @@ async function loadEmployeeData() {
       profileImg: "assets/profile/profile.jpg",
       initials: "KV"
     };
+    companyServices = activeEmployee.services;
   }
 
   window.activeEmployee = activeEmployee;
@@ -468,11 +471,11 @@ async function loadEmployeeData() {
     });
   }
 
-  // 5. Services
+  // 5. Services (Loaded from corporate services list)
   const servicesGrid = document.getElementById('services-grid');
   if (servicesGrid) {
     servicesGrid.innerHTML = '';
-    activeEmployee.services.forEach(service => {
+    companyServices.forEach(service => {
       const card = document.createElement('article');
       card.className = 'service-card';
       card.setAttribute('role', 'listitem');

@@ -1,3 +1,4 @@
-- [ ] Refactor `qr.js` to handle presenter mode (?qr=true) and clean visitor URLs
-- [ ] Create premium Admin Panel `admin.html`
+- [ ] Restructure `data/employees.json` to extract `companyServices` to root level
+- [ ] Modify `js/app.js` to parse root `companyServices` and individual employee records
+- [ ] Modify `admin.html` to parse restructured profiles
 - [ ] Verify functionality locally and push to GitHub
