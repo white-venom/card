@@ -127,7 +127,7 @@ const QRManager = (() => {
         window.open(img.src, '_blank');
       }
     }
-
+  }
 
   function init() {
     // Generate initially once event triggers
