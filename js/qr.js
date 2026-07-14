@@ -49,10 +49,18 @@ const QRManager = (() => {
         text:           qrTextUrl,
         width:          200,
         height:         200,
-        colorDark:      '#0B0F19',
-        colorLight:     '#FFFFFF',
+        colorDark:      "#000000",
+        colorLight:     "#FFFFFF",
         correctLevel:   QRCode.CorrectLevel.H,
       });
+
+      // Render custom theme & logo on QR canvas
+      setTimeout(() => {
+        const canvas = container.querySelector('canvas');
+        if (canvas) {
+          applyThemeAndLogoToQR(canvas);
+        }
+      }, 80);
     } else {
       // Fallback: QR Server API (no backend needed, pure URL-based)
       const img = document.createElement('img');
@@ -127,6 +135,62 @@ const QRManager = (() => {
         window.open(img.src, '_blank');
       }
     }
+  function applyThemeAndLogoToQR(canvas) {
+    const ctx = canvas.getContext('2d');
+    const size = canvas.width;
+
+    // 1. Get offscreen QR copy
+    const offscreen = document.createElement('canvas');
+    offscreen.width = size;
+    offscreen.height = size;
+    const oCtx = offscreen.getContext('2d');
+    oCtx.drawImage(canvas, 0, 0);
+
+    // 2. Clear canvas
+    ctx.clearRect(0, 0, size, size);
+
+    // 3. Draw gradient background on original canvas
+    const grad = ctx.createLinearGradient(0, 0, size, size);
+    grad.addColorStop(0, '#FF4D6D');    // Coral Red
+    grad.addColorStop(0.3, '#D63AF9');  // Magenta
+    grad.addColorStop(0.7, '#7B2FBE');  // Purple
+    grad.addColorStop(1, '#3B82F6');    // Electric Blue
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+
+    // 4. Clip gradient to QR pattern
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.drawImage(offscreen, 0, 0);
+
+    // 5. Draw white background underneath (for non-QR pixels)
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, size, size);
+
+    // 6. Draw central logo (source-over overlay)
+    ctx.globalCompositeOperation = 'source-over';
+    const logo = new Image();
+    logo.src = 'assets/logo/logo.webp';
+    logo.onload = () => {
+      const logoSize = size * 0.22; // 22% of QR width
+      const x = (size - logoSize) / 2;
+      const y = (size - logoSize) / 2;
+
+      // Quiet zone card (rounded white block)
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      const radius = 6;
+      if (ctx.roundRect) {
+        ctx.roundRect(x - 4, y - 4, logoSize + 8, logoSize + 8, radius);
+      } else {
+        ctx.rect(x - 4, y - 4, logoSize + 8, logoSize + 8);
+      }
+      ctx.fill();
+
+      // Draw the actual Xenelasia logo
+      ctx.drawImage(logo, x, y, logoSize, logoSize);
+    };
   }
 
   function init() {
