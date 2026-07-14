@@ -376,7 +376,16 @@ async function renderDirectory() {
   try {
     const response = await fetch('data/employees.json');
     const data = await response.json();
-    const employees = data.employees || {};
+    
+    let customEmployees = {};
+    try {
+      const stored = localStorage.getItem('custom_employees');
+      if (stored) customEmployees = JSON.parse(stored);
+    } catch (e) {
+      console.error("Failed to parse custom employees", e);
+    }
+    
+    const employees = { ...data.employees, ...customEmployees };
 
     grid.innerHTML = '';
     Object.keys(employees).forEach(key => {
@@ -432,7 +441,17 @@ async function loadEmployeeData() {
   try {
     const response = await fetch('data/employees.json');
     const data = await response.json();
-    activeEmployee = data.employees[userKey.toLowerCase()] || data.employees['kartik'];
+    
+    let customEmployees = {};
+    try {
+      const stored = localStorage.getItem('custom_employees');
+      if (stored) customEmployees = JSON.parse(stored);
+    } catch (e) {
+      console.error("Failed to parse custom employees", e);
+    }
+    
+    const employees = { ...data.employees, ...customEmployees };
+    activeEmployee = employees[userKey.toLowerCase()] || employees['kartik'];
     companyServices = data.companyServices || [];
   } catch (error) {
     console.error('Error loading employee data, using fallback:', error);

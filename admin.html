@@ -307,7 +307,10 @@
         <h2 style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-4);">Select Employee Card</h2>
         
         <div class="form-group">
-          <label for="employee-select">Active Card Profile</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
+            <label for="employee-select" style="margin: 0;">Active Card Profile</label>
+            <button id="clear-custom-btn" type="button" style="cursor: pointer; border: none; background: none; font-size: 0.75rem; color: var(--coral); font-weight: 600; padding: 0; display: none;">Clear Custom Profiles</button>
+          </div>
           <select id="employee-select">
             <option value="">Loading profiles...</option>
           </select>
@@ -509,20 +512,56 @@
 
 
 
+    const clearCustomBtn = document.getElementById('clear-custom-btn');
+
+    function populateSelectDropdown(selectedKey) {
+      selectEl.innerHTML = '<option value="">-- Choose employee --</option>';
+      Object.keys(employeesData).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = `${employeesData[key].fullName} (${employeesData[key].designation})`;
+        if (key === selectedKey) {
+          opt.selected = true;
+        }
+        selectEl.appendChild(opt);
+      });
+
+      // Show/Hide Clear Custom button based on stored items
+      const stored = localStorage.getItem('custom_employees');
+      if (stored && JSON.parse(stored) && Object.keys(JSON.parse(stored)).length > 0) {
+        clearCustomBtn.style.display = 'inline-block';
+      } else {
+        clearCustomBtn.style.display = 'none';
+      }
+
+      if (selectedKey) {
+        selectEl.value = selectedKey;
+        selectEl.dispatchEvent(new Event('change'));
+      }
+    }
+
+    if (clearCustomBtn) {
+      clearCustomBtn.addEventListener('click', () => {
+        localStorage.removeItem('custom_employees');
+        showToast('🗑️ Custom local profiles cleared!');
+        setTimeout(() => window.location.reload(), 800);
+      });
+    }
+
     // Load data
     fetch('data/employees.json')
       .then(res => res.json())
       .then(data => {
-        employeesData = data.employees || {};
-        
-        // Populate select list
-        selectEl.innerHTML = '<option value="">-- Choose employee --</option>';
-        Object.keys(employeesData).forEach(key => {
-          const opt = document.createElement('option');
-          opt.value = key;
-          opt.textContent = `${employeesData[key].fullName} (${employeesData[key].designation})`;
-          selectEl.appendChild(opt);
-        });
+        let customEmployees = {};
+        try {
+          const stored = localStorage.getItem('custom_employees');
+          if (stored) customEmployees = JSON.parse(stored);
+        } catch (e) {
+          console.error("Failed to parse stored employees", e);
+        }
+
+        employeesData = { ...(data.employees || {}), ...customEmployees };
+        populateSelectDropdown();
       })
       .catch(err => {
         console.error("Error loading JSON", err);
@@ -762,6 +801,24 @@
         "initials": initials
       };
       
+      // Save locally to localStorage custom_employees
+      let localCustom = {};
+      try {
+        const stored = localStorage.getItem('custom_employees');
+        if (stored) localCustom = JSON.parse(stored);
+      } catch (e) {
+        console.error("Failed to parse custom employees", e);
+      }
+      
+      localCustom[key] = newProfile;
+      localStorage.setItem('custom_employees', JSON.stringify(localCustom));
+      
+      // Update our local memory cache
+      employeesData[key] = newProfile;
+      
+      // Automatically refresh selector options and select the newly added card!
+      populateSelectDropdown(key);
+
       // Format block
       const resultObj = {};
       resultObj[key] = newProfile;
@@ -779,6 +836,14 @@
       document.getElementById('copy-json-btn').onclick = () => {
         copyText(outputArea.value, 'JSON Code copied!');
       };
+
+      // Reset form and skill state
+      document.getElementById('profile-form').reset();
+      document.getElementById('gen-website').value = 'xcplllp.com'; // restore default website
+      generatedSkills = [];
+      renderBuilderSkills();
+
+      showToast(`🎉 Success! Saved card & generated QR code for ${newProfile.fullName}!`);
     });
   </script>
 </body>
