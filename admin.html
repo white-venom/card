@@ -220,6 +220,39 @@
       25% { transform: translateX(-6px); }
       75% { transform: translateX(6px); }
     }
+
+    /* Skills Editor styling */
+    .editor-skill-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    
+    .editor-skill-chip button {
+      background: none;
+      border: none;
+      color: var(--coral);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      margin-left: var(--space-1);
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .editor-skill-chip button:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -344,8 +377,21 @@
             <input type="text" id="gen-title" class="form-control" placeholder="e.g., Lead Architect" required>
           </div>
           <div class="form-group">
-            <label for="gen-bio">Short Bio</label>
-            <input type="text" id="gen-bio" class="form-control" placeholder="e.g., Designing secure and scalable enterprise systems..." required>
+            <label>Skills Builder</label>
+            <div id="skills-builder-container" style="display:flex; flex-direction:column; gap:8px;">
+              <div id="skills-list" style="display:flex; flex-wrap:wrap; gap:6px;">
+                <!-- Skill chips will render here -->
+              </div>
+              <div id="new-skill-inputs" style="display:none; gap:6px; align-items:center;">
+                <input type="text" id="new-skill-icon" class="form-control" placeholder="Emoji (e.g. 🤖)" style="width:100px; text-align:center;">
+                <input type="text" id="new-skill-name" class="form-control" placeholder="Skill Name (e.g. AI Solutions)" style="flex:1;">
+                <button type="button" id="confirm-add-skill-btn" class="btn btn--primary" style="padding: 10px 14px; font-size: 0.8rem;">Add</button>
+                <button type="button" id="cancel-add-skill-btn" class="btn btn--glass" style="padding: 10px 14px; font-size: 0.8rem;">Cancel</button>
+              </div>
+              <button type="button" id="add-skill-trigger-btn" class="btn btn--glass" style="align-self: flex-start; padding: var(--space-2) var(--space-4); font-size: 0.75rem;">
+                + Add Skill
+              </button>
+            </div>
           </div>
         </div>
 
@@ -589,6 +635,84 @@
       });
     }
 
+    // Skills Builder state and handlers
+    let generatedSkills = [];
+
+    const addSkillTrigger = document.getElementById('add-skill-trigger-btn');
+    const newSkillInputs = document.getElementById('new-skill-inputs');
+    const newSkillIcon = document.getElementById('new-skill-icon');
+    const newSkillName = document.getElementById('new-skill-name');
+    const confirmAddBtn = document.getElementById('confirm-add-skill-btn');
+    const cancelAddBtn = document.getElementById('cancel-add-skill-btn');
+    const skillsList = document.getElementById('skills-list');
+
+    function renderBuilderSkills() {
+      if (!skillsList) return;
+      skillsList.innerHTML = '';
+      
+      if (generatedSkills.length === 0) {
+        skillsList.innerHTML = '<span style="color:var(--text-secondary); font-size:0.8rem; font-style:italic;">No skills added yet.</span>';
+        return;
+      }
+
+      generatedSkills.forEach((skill, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'editor-skill-chip';
+        chip.innerHTML = `
+          <span>${skill.icon} ${skill.name}</span>
+          <button type="button" onclick="removeBuilderSkill(${index})">&times;</button>
+        `;
+        skillsList.appendChild(chip);
+      });
+    }
+
+    window.removeBuilderSkill = function(index) {
+      generatedSkills.splice(index, 1);
+      renderBuilderSkills();
+    };
+
+    if (addSkillTrigger && newSkillInputs) {
+      addSkillTrigger.addEventListener('click', () => {
+        addSkillTrigger.style.display = 'none';
+        newSkillInputs.style.display = 'flex';
+        newSkillIcon.focus();
+      });
+    }
+
+    if (cancelAddBtn) {
+      cancelAddBtn.addEventListener('click', () => {
+        newSkillInputs.style.display = 'none';
+        addSkillTrigger.style.display = 'block';
+        newSkillIcon.value = '';
+        newSkillName.value = '';
+      });
+    }
+
+    if (confirmAddBtn) {
+      confirmAddBtn.addEventListener('click', () => {
+        const icon = newSkillIcon.value.trim() || '⚡';
+        const name = newSkillName.value.trim();
+
+        if (!name) {
+          showToast('⚠️ Please enter a skill name.');
+          newSkillName.focus();
+          return;
+        }
+
+        generatedSkills.push({ icon, name });
+        renderBuilderSkills();
+
+        // Reset and hide
+        newSkillInputs.style.display = 'none';
+        addSkillTrigger.style.display = 'block';
+        newSkillIcon.value = '';
+        newSkillName.value = '';
+      });
+    }
+
+    // Initial render
+    renderBuilderSkills();
+
     // Profile JSON Generator
     document.getElementById('profile-form').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -596,7 +720,6 @@
       const first = document.getElementById('gen-first').value.trim();
       const last = document.getElementById('gen-last').value.trim();
       const title = document.getElementById('gen-title').value.trim();
-      const bio = document.getElementById('gen-bio').value.trim();
       const phone = document.getElementById('gen-phone').value.trim();
       const phoneFmt = document.getElementById('gen-phone-format').value.trim();
       const email = document.getElementById('gen-email').value.trim();
@@ -605,6 +728,9 @@
       
       const key = first.toLowerCase();
       const initials = (first.charAt(0) + last.charAt(0)).toUpperCase();
+      
+      // Auto-generate a beautiful bio using their designation
+      const bio = `Helping businesses leverage technology, AI, automation, and digital transformation in ${title} strategies.`;
       
       // Standard profiles schema matching employees.json structure
       const newProfile = {
@@ -627,7 +753,7 @@
           "country": "India",
           "postal": "201309"
         },
-        "skills": [
+        "skills": generatedSkills.length > 0 ? generatedSkills : [
           { "icon": "💼", "name": "Management" },
           { "icon": "🎯", "name": "Consulting" },
           { "icon": "⚡", "name": "Automation" }
