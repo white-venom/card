@@ -113,13 +113,13 @@
        TOP NAVIGATION BAR
   ════════════════════════════════════════════════════════════ -->
   <header class="topbar" role="banner">
-    <div class="topbar__logo">
+    <a href="index.html" class="topbar__logo" style="text-decoration: none;">
       <img src="assets/logo/logo.webp" alt="Xenelasia Consultancy Logo" width="auto" height="32" loading="eager"
         onerror="this.style.display='none'; document.getElementById('topbar-text-logo').style.display='block';" />
       <span id="topbar-text-logo" style="display:none; font-size:1rem; font-weight:800; letter-spacing:-0.02em;"
         class="topbar__name">XCP</span>
       <span class="topbar__name" style="margin-left:4px;">Xenelasia</span>
-    </div>
+    </a>
 
     <div class="topbar__actions">
       <!-- Dark / Light toggle -->
@@ -133,7 +133,7 @@
   <!-- ═══════════════════════════════════════════════════════
        MAIN CONTENT
   ════════════════════════════════════════════════════════════ -->
-  <main class="main-content page-wrapper" id="main-content" role="main">
+  <main class="main-content page-wrapper" id="profile-view" role="main">
 
     <!-- ─────────────────────────────────────────────────────
          HERO / PROFILE CARD
@@ -375,6 +375,21 @@
       </div>
     </section>
 
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       DIRECTORY VIEW (Showed at root domain / index.html without user parameter)
+  ════════════════════════════════════════════════════════════ -->
+  <main class="main-content page-wrapper" id="directory-view" style="display: none;" role="main">
+    <div class="directory-container">
+      <header class="directory-header">
+        <h1 class="directory-title">Xenelasia Team</h1>
+        <p class="directory-subtitle">Select a team member to view their digital business card</p>
+      </header>
+      <div class="directory-grid" id="directory-grid" role="list" aria-label="Team directory">
+        <!-- Dynamically populated from employees.json -->
+      </div>
+    </div>
   </main>
 
   <!-- ═══════════════════════════════════════════════════════

@@ -368,13 +368,65 @@ function initProfileFallback() {
   img.src = src;
 }
 
+async function renderDirectory() {
+  const grid = document.getElementById('directory-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div style="color:var(--text-secondary); grid-column: 1/-1; text-align:center; padding: 2rem;">Loading directory...</div>';
+
+  try {
+    const response = await fetch('data/employees.json');
+    const data = await response.json();
+    const employees = data.employees || {};
+
+    grid.innerHTML = '';
+    Object.keys(employees).forEach(key => {
+      const emp = employees[key];
+      const card = document.createElement('article');
+      card.className = 'directory-card';
+      card.setAttribute('role', 'listitem');
+
+      // Check if image exists
+      const photoHtml = emp.profileImg 
+        ? `<img class="dir-profile-img" src="${emp.profileImg}" alt="${emp.fullName} photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+           <div class="dir-initials" style="display:none;" data-initials="${emp.initials}"></div>`
+        : `<div class="dir-initials" data-initials="${emp.initials}"></div>`;
+
+      card.innerHTML = `
+        <div class="dir-photo-container">
+          ${photoHtml}
+        </div>
+        <h2 class="dir-name">${emp.fullName}</h2>
+        <p class="dir-title">${emp.designation}</p>
+        <div class="dir-actions">
+          <a href="?user=${key}" class="dir-btn dir-btn--primary">View Card</a>
+          <a href="?user=${key}&qr=true" class="dir-btn dir-btn--glass">View QR</a>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error loading directory", error);
+    grid.innerHTML = '<div style="color:var(--coral); grid-column: 1/-1; text-align:center; padding: 2rem;">Failed to load employee list.</div>';
+  }
+}
+
 /* ─── Load Employee Data Dynamically ───────────────────────── */
 let activeEmployee = null;
 
 async function loadEmployeeData() {
   const urlParams = new URLSearchParams(window.location.search);
-  const userKey = urlParams.get('user') || 'kartik';
+  const userKey = urlParams.get('user');
   let companyServices = [];
+
+  if (!userKey) {
+    document.getElementById('profile-view').style.display = 'none';
+    document.getElementById('directory-view').style.display = 'block';
+    renderDirectory();
+    return;
+  } else {
+    document.getElementById('profile-view').style.display = 'block';
+    document.getElementById('directory-view').style.display = 'none';
+  }
 
   try {
     const response = await fetch('data/employees.json');
