@@ -1,0 +1,9 @@
+# Local IDE configuration
+.gemini/
+.vscode/
+.idea/
+
+# System and logs
+*.log
+Thumbs.db
+.DS_Store
