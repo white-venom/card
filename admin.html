@@ -191,7 +191,7 @@
       <!-- Right side: QR Display -->
       <div class="glass-card admin-card" style="text-align: center;">
         <h2 style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-4);">QR Code</h2>
-        <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:var(--space-6);">Scan this to open Presenter Mode or print for cards</p>
+        <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:var(--space-6);">Scan this to open the Visitor Card directly or print for networking cards</p>
         
         <div class="qr-wrapper" style="background:#fff; padding: var(--space-4); border-radius: var(--radius-lg); display: inline-block; margin-bottom: var(--space-6);">
           <div id="qr-container"></div>
@@ -361,11 +361,11 @@
       document.getElementById('copy-presenter-btn').onclick = () => copyText(presenterUrl, 'Presenter Link Copied!');
       document.getElementById('open-presenter-btn').onclick = () => window.open(presenterUrl, '_blank');
       
-      // Generate QR (pointing to presenter URL so the Admin can scan it to launch presenter screen)
+      // Generate QR (pointing to visitor URL so scanning opens the clean visitor view)
       qrContainer.innerHTML = '';
       if (typeof QRCode !== 'undefined') {
         new QRCode(qrContainer, {
-          text: presenterUrl,
+          text: visitorUrl,
           width: 180,
           height: 180,
           colorDark: '#0B0F19',
@@ -379,7 +379,7 @@
           const canvas = qrContainer.querySelector('canvas');
           if (canvas) {
             const a = document.createElement('a');
-            a.download = `${key}-presenter-qr.png`;
+            a.download = `${key}-visitor-qr.png`;
             a.href = canvas.toDataURL('image/png');
             a.click();
             showToast('⬇️ Downloading QR Code...');
