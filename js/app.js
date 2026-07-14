@@ -395,13 +395,14 @@ async function renderDirectory() {
         <div class="dir-photo-container">
           ${photoHtml}
         </div>
-        <h2 class="dir-name">${emp.fullName}</h2>
-        <p class="dir-title">${emp.designation}</p>
+        <h2 class="dir-name" style="color: var(--text-primary) !important; display: block !important; visibility: visible !important;">${emp.fullName}</h2>
+        <p class="dir-title" style="color: var(--coral) !important; display: block !important; visibility: visible !important;">${emp.designation}</p>
         <div class="dir-actions">
           <a href="?user=${key}" class="dir-btn dir-btn--primary">View Card</a>
           <a href="?user=${key}&qr=true" class="dir-btn dir-btn--glass">View QR</a>
         </div>
       `;
+      console.log(`Rendered directory card for: ${emp.fullName}`);
       grid.appendChild(card);
     });
   } catch (error) {
