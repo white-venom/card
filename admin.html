@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Xenelasia Consultancy</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FF4D6D'/><text x='50' y='68' font-family='Arial' font-weight='bold' font-size='52' text-anchor='middle' fill='white'>A</text></svg>" />
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  
+  <!-- QR Code Generator Library -->
+  <script src="js/qrcode.min.js"></script>
+
+  <style>
+    /* Admin specific adjustments */
+    .admin-container {
+      max-width: 900px;
+      margin: 100px auto 50px;
+      padding: 0 var(--space-4);
+    }
+    
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-6);
+    }
+    
+    @media (max-width: 768px) {
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .admin-card {
+      padding: var(--space-6);
+    }
+    
+    .form-group {
+      margin-bottom: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    
+    label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+    
+    .form-control, select {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      color: var(--text-primary);
+      font-family: var(--font-primary);
+      font-size: 0.9rem;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+      width: 100%;
+    }
+    
+    .form-control:focus, select:focus {
+      outline: none;
+      border-color: var(--magenta);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    
+    select option {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    
+    .btn-action-group {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+    
+    .link-display {
+      background: rgba(0,0,0,0.2);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      font-family: monospace;
+      font-size: 0.78rem;
+      word-break: break-all;
+      border: 1px solid var(--glass-border);
+      margin-bottom: var(--space-2);
+    }
+    
+    textarea.json-output {
+      font-family: monospace;
+      font-size: 0.78rem;
+      resize: vertical;
+      min-height: 180px;
+    }
+    
+    .badge-status {
+      display: inline-block;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--electric);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      margin-top: var(--space-2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Layers -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="aurora-blob aurora-blob--1 animate-blob-1"></div>
+    <div class="aurora-blob aurora-blob--2 animate-blob-2"></div>
+    <div class="aurora-blob aurora-blob--3 animate-blob-3"></div>
+  </div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="topbar__logo">
+      <img src="assets/logo/logo.webp" alt="Xenelasia Consultancy Logo" height="32" onerror="this.style.display='none'; document.getElementById('topbar-text-logo').style.display='block';">
+      <span id="topbar-text-logo" style="display:none; font-size:1rem; font-weight:800; letter-spacing:-0.02em;" class="topbar__name">XCP</span>
+      <span class="topbar__name" style="margin-left:4px;">Xenelasia</span>
+      <span class="badge-status">Admin Portal</span>
+    </div>
+    
+    <div class="topbar__actions">
+      <a href="index.html" class="btn btn--glass" style="padding: var(--space-2) var(--space-4); font-size:0.75rem;">View Card</a>
+    </div>
+  </header>
+
+  <!-- Container -->
+  <main class="admin-container">
+    <div class="section-header">
+      <span class="section-label">XCP Card Administration</span>
+      <div class="section-line"></div>
+    </div>
+    
+    <div class="admin-grid">
+      
+      <!-- Left side: Employee Cards List and Links -->
+      <div class="glass-card admin-card animate-glow">
+        <h2 style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-4);">Select Employee Card</h2>
+        
+        <div class="form-group">
+          <label for="employee-select">Active Card Profile</label>
+          <select id="employee-select">
+            <option value="">Loading profiles...</option>
+          </select>
+        </div>
+        
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: var(--space-5) 0;">
+        
+        <div id="links-container" style="display:none;">
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:var(--space-4);">Profile Connections</h3>
+          
+          <div class="form-group">
+            <label>Visitor Link (QR Scanners View)</label>
+            <div id="visitor-link-text" class="link-display"></div>
+            <div class="btn-action-group">
+              <button id="copy-visitor-btn" class="btn btn--primary" style="padding:var(--space-2) var(--space-4); font-size:0.75rem;">Copy Link</button>
+              <button id="open-visitor-btn" class="btn btn--glass" style="padding:var(--space-2) var(--space-4); font-size:0.75rem;">Open Link</button>
+            </div>
+          </div>
+          
+          <div class="form-group" style="margin-top:var(--space-5);">
+            <label>Presenter Link (Shows QR Code on Screen)</label>
+            <div id="presenter-link-text" class="link-display"></div>
+            <div class="btn-action-group">
+              <button id="copy-presenter-btn" class="btn btn--primary" style="padding:var(--space-2) var(--space-4); font-size:0.75rem;">Copy Link</button>
+              <button id="open-presenter-btn" class="btn btn--glass" style="padding:var(--space-2) var(--space-4); font-size:0.75rem;">Open Link</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right side: QR Display -->
+      <div class="glass-card admin-card" style="text-align: center;">
+        <h2 style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-4);">QR Code</h2>
+        <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:var(--space-6);">Scan this to open Presenter Mode or print for cards</p>
+        
+        <div class="qr-wrapper" style="background:#fff; padding: var(--space-4); border-radius: var(--radius-lg); display: inline-block; margin-bottom: var(--space-6);">
+          <div id="qr-container"></div>
+        </div>
+        
+        <div>
+          <button id="download-qr-btn" class="btn btn--primary ripple-container" style="display:none; margin: 0 auto;">Download QR Image</button>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Profile Generator Form -->
+    <div class="glass-card admin-card" style="margin-top:var(--space-8);">
+      <h2 style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: var(--space-2);">Profile JSON Generator</h2>
+      <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:var(--space-6);">Create new employee profile configs to copy-paste into <code>data/employees.json</code></p>
+      
+      <form id="profile-form">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);">
+          <div class="form-group">
+            <label for="gen-first">First Name</label>
+            <input type="text" id="gen-first" class="form-control" placeholder="e.g., Jane" required>
+          </div>
+          <div class="form-group">
+            <label for="gen-last">Last Name</label>
+            <input type="text" id="gen-last" class="form-control" placeholder="e.g., Doe" required>
+          </div>
+        </div>
+        
+        <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:var(--space-4);">
+          <div class="form-group">
+            <label for="gen-title">Title / Designation</label>
+            <input type="text" id="gen-title" class="form-control" placeholder="e.g., Lead Architect" required>
+          </div>
+          <div class="form-group">
+            <label for="gen-bio">Short Bio</label>
+            <input type="text" id="gen-bio" class="form-control" placeholder="e.g., Designing secure and scalable enterprise systems..." required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:var(--space-4);">
+          <div class="form-group">
+            <label for="gen-phone">Phone Number (Clean)</label>
+            <input type="text" id="gen-phone" class="form-control" placeholder="e.g., +918126338976" required>
+          </div>
+          <div class="form-group">
+            <label for="gen-phone-format">Phone Number (Formatted)</label>
+            <input type="text" id="gen-phone-format" class="form-control" placeholder="e.g., +91 81263 38976" required>
+          </div>
+          <div class="form-group">
+            <label for="gen-email">Email Address</label>
+            <input type="email" id="gen-email" class="form-control" placeholder="e.g., jane@xcplllp.com" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:var(--space-4);">
+          <div class="form-group">
+            <label for="gen-linkedin">LinkedIn Profile URL</label>
+            <input type="url" id="gen-linkedin" class="form-control" placeholder="e.g., https://www.linkedin.com/in/jane-doe/" required>
+          </div>
+          <div class="form-group">
+            <label for="gen-website">Website URL (No protocol)</label>
+            <input type="text" id="gen-website" class="form-control" placeholder="e.g., xcplllp.com" value="xcplllp.com" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary" style="margin-top:var(--space-4);">Generate JSON Block</button>
+      </form>
+      
+      <!-- Output Area -->
+      <div id="output-wrapper" style="display:none; margin-top:var(--space-6);">
+        <label for="json-output">Add this to your <code>data/employees.json</code> file:</label>
+        <textarea id="json-output" class="form-control json-output" readonly></textarea>
+        <button id="copy-json-btn" class="btn btn--glass" style="margin-top:var(--space-3); font-size:0.8rem; padding:var(--space-2) var(--space-4);">Copy JSON Code</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Element -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Main logic -->
+  <script>
+    'use strict';
+    
+    let employeesData = {};
+    const selectEl = document.getElementById('employee-select');
+    const qrContainer = document.getElementById('qr-container');
+    const downloadBtn = document.getElementById('download-qr-btn');
+    
+    // Copy toast helper
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+    }
+    
+    // Copy logic
+    async function copyText(text, successMsg) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(`✅ ${successMsg}`);
+      } catch (err) {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        showToast(`✅ ${successMsg}`);
+      }
+    }
+
+    // Load data
+    fetch('data/employees.json')
+      .then(res => res.json())
+      .then(data => {
+        employeesData = data;
+        
+        // Populate select list
+        selectEl.innerHTML = '<option value="">-- Choose employee --</option>';
+        Object.keys(data).forEach(key => {
+          const opt = document.createElement('option');
+          opt.value = key;
+          opt.textContent = `${data[key].fullName} (${data[key].designation})`;
+          selectEl.appendChild(opt);
+        });
+      })
+      .catch(err => {
+        console.error("Error loading JSON", err);
+        selectEl.innerHTML = '<option value="">Error loading config</option>';
+      });
+
+    // Select change logic
+    selectEl.addEventListener('change', (e) => {
+      const key = e.target.value;
+      const linksContainer = document.getElementById('links-container');
+      
+      if (!key) {
+        linksContainer.style.display = 'none';
+        qrContainer.innerHTML = 'Select an employee';
+        downloadBtn.style.display = 'none';
+        return;
+      }
+      
+      const emp = employeesData[key];
+      linksContainer.style.display = 'block';
+      
+      // Calculate URLs
+      const loc = window.location;
+      // Get base path (handles direct file loading or vercel hostnames)
+      const base = loc.origin + loc.pathname.substring(0, loc.pathname.lastIndexOf('/'));
+      
+      const visitorUrl = `${base}/index.html?user=${key}`;
+      const presenterUrl = `${base}/index.html?user=${key}&qr=true`;
+      
+      document.getElementById('visitor-link-text').textContent = visitorUrl;
+      document.getElementById('presenter-link-text').textContent = presenterUrl;
+      
+      // Setup click listeners
+      document.getElementById('copy-visitor-btn').onclick = () => copyText(visitorUrl, 'Visitor Link Copied!');
+      document.getElementById('open-visitor-btn').onclick = () => window.open(visitorUrl, '_blank');
+      
+      document.getElementById('copy-presenter-btn').onclick = () => copyText(presenterUrl, 'Presenter Link Copied!');
+      document.getElementById('open-presenter-btn').onclick = () => window.open(presenterUrl, '_blank');
+      
+      // Generate QR (pointing to presenter URL so the Admin can scan it to launch presenter screen)
+      qrContainer.innerHTML = '';
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(qrContainer, {
+          text: presenterUrl,
+          width: 180,
+          height: 180,
+          colorDark: '#0B0F19',
+          colorLight: '#FFFFFF',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        
+        // Show download button
+        downloadBtn.style.display = 'block';
+        downloadBtn.onclick = () => {
+          const canvas = qrContainer.querySelector('canvas');
+          if (canvas) {
+            const a = document.createElement('a');
+            a.download = `${key}-presenter-qr.png`;
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+            showToast('⬇️ Downloading QR Code...');
+          }
+        };
+      } else {
+        qrContainer.innerHTML = '<span style="color:var(--coral);">QR Library not loaded</span>';
+      }
+    });
+
+    // Profile JSON Generator
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const first = document.getElementById('gen-first').value.trim();
+      const last = document.getElementById('gen-last').value.trim();
+      const title = document.getElementById('gen-title').value.trim();
+      const bio = document.getElementById('gen-bio').value.trim();
+      const phone = document.getElementById('gen-phone').value.trim();
+      const phoneFmt = document.getElementById('gen-phone-format').value.trim();
+      const email = document.getElementById('gen-email').value.trim();
+      const linkedin = document.getElementById('gen-linkedin').value.trim();
+      const website = document.getElementById('gen-website').value.trim();
+      
+      const key = first.toLowerCase();
+      const initials = (first.charAt(0) + last.charAt(0)).toUpperCase();
+      
+      // Standard profiles schema matching employees.json structure
+      const newProfile = {
+        "firstName": first,
+        "lastName": last,
+        "fullName": `${first} ${last}`,
+        "designation": title,
+        "company": "Xenelasia Consultancy",
+        "bio": bio,
+        "phone": phone,
+        "phoneFormatted": phoneFmt,
+        "email": email,
+        "website": website,
+        "linkedin": linkedin,
+        "whatsapp": `https://wa.me/${phone.replace(/[^0-9]/g, '')}`,
+        "address": {
+          "street": "1908, Iconic Corenthum Tower",
+          "city": "Sector 62, Noida",
+          "state": "Uttar Pradesh",
+          "country": "India",
+          "postal": "201309"
+        },
+        "skills": [
+          { "icon": "💼", "name": "Management" },
+          { "icon": "🎯", "name": "Consulting" },
+          { "icon": "⚡", "name": "Automation" }
+        ],
+        "services": [
+          { "icon": "📊", "name": "Digital Consulting" },
+          { "icon": "⚙️", "name": "Automation" },
+          { "icon": "🛡️", "name": "Cyber Security" }
+        ],
+        "profileImg": `assets/profile/${key}.jpg`,
+        "initials": initials
+      };
+      
+      // Format block
+      const resultObj = {};
+      resultObj[key] = newProfile;
+      const formattedJson = JSON.stringify(resultObj, null, 2);
+      
+      // Remove wrapper braces so it can be directly pasted inside target JSON array/object structure
+      const cleanedJson = formattedJson.substring(2, formattedJson.length - 2);
+      
+      const outputArea = document.getElementById('json-output');
+      outputArea.value = `,\n${cleanedJson}`;
+      
+      document.getElementById('output-wrapper').style.display = 'block';
+      document.getElementById('output-wrapper').scrollIntoView({ behavior: 'smooth' });
+      
+      document.getElementById('copy-json-btn').onclick = () => {
+        copyText(outputArea.value, 'JSON Code copied!');
+      };
+    });
+  </script>
+</body>
+</html>

@@ -17,7 +17,26 @@ const QRManager = (() => {
    * If unavailable, fallback to a QR API.
    */
   function generate(employee) {
-    const url = window.location.href;
+    const urlParams = new URLSearchParams(window.location.search);
+    const showQr = urlParams.get('qr') === 'true';
+    const qrSection = document.querySelector('[aria-labelledby="qr-heading"]');
+
+    if (!showQr) {
+      if (qrSection) {
+        qrSection.style.display = 'none';
+      }
+      return;
+    } else {
+      if (qrSection) {
+        qrSection.style.display = 'block';
+      }
+    }
+
+    // Generate the QR link pointing to the visitor mode (removing &qr=true parameter)
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete('qr');
+    const qrTextUrl = cleanUrl.toString();
+
     const container = document.getElementById(CONTAINER_ID);
     if (!container) return;
 
@@ -27,7 +46,7 @@ const QRManager = (() => {
     if (typeof QRCode !== 'undefined') {
       // Library available
       new QRCode(container, {
-        text:           url,
+        text:           qrTextUrl,
         width:          200,
         height:         200,
         colorDark:      '#0B0F19',
@@ -37,7 +56,7 @@ const QRManager = (() => {
     } else {
       // Fallback: QR Server API (no backend needed, pure URL-based)
       const img = document.createElement('img');
-      const encodedUrl = encodeURIComponent(url);
+      const encodedUrl = encodeURIComponent(qrTextUrl);
       img.src   = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedUrl}&bgcolor=ffffff&color=0b0f19&margin=4&qzone=1&format=svg`;
       img.alt   = 'QR Code to this digital card';
       img.width = 200;
@@ -64,7 +83,7 @@ const QRManager = (() => {
         <span style="font-weight:700; color:var(--coral);">💡 Local Test Mode</span><br>
         1. Both PC and phone must be on the same Wi-Fi.<br>
         2. Access the site on your PC via your IP address:<br>
-        <code style="background:rgba(255,255,255,0.1); padding:2px 4px; border-radius:3px; font-family:monospace; display:block; margin:4px 0; word-break:break-all;">http://192.168.1.23:8000/?user=${username}</code>
+        <code style="background:rgba(255,255,255,0.1); padding:2px 4px; border-radius:3px; font-family:monospace; display:block; margin:4px 0; word-break:break-all;">http://192.168.1.23:8000/?user=${username}&qr=true</code>
         Then scan the regenerated QR. When deployed, it links to your domain automatically.
       `;
       container.appendChild(infoBox);

@@ -1,6 +1,3 @@
-- [x] Create `data/employees.json` containing Kartik's and Shashank's information
-- [x] Modify `index.html` to add placeholder IDs for dynamic injection
-- [x] Refactor `app.js` to parse URL parameter, load JSON, and populate content
-- [x] Refactor `qr.js` to generate dynamic QR codes
-- [x] Refactor `contact.js` to generate custom vCards (.vcf)
-- [x] Verify the implementation locally and push to GitHub
+- [ ] Refactor `qr.js` to handle presenter mode (?qr=true) and clean visitor URLs
+- [ ] Create premium Admin Panel `admin.html`
+- [ ] Verify functionality locally and push to GitHub
