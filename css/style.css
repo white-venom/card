@@ -1432,14 +1432,10 @@ body.presenter-mode .main-content {
   gap: var(--space-2);
 }
 
-.silver-logo-symbol {
-  font-family: Arial, sans-serif;
-  font-weight: 900;
-  font-size: 1.1rem;
-  background: linear-gradient(135deg, var(--coral), var(--purple));
-  color: #fff;
-  padding: 2px 6px;
-  border-radius: 4px;
+.silver-logo-img {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
 }
 
 .silver-logo-text {
