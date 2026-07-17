@@ -286,7 +286,7 @@ const Parallax = (() => {
 /* ─── 3D Card Tilt Effect ───────────────────────────────────── */
 const CardTilt = (() => {
   function init() {
-    const cards = document.querySelectorAll('.service-card, .contact-item');
+    const cards = document.querySelectorAll('.service-card, .contact-item, .silver-physical-card');
     if (!window.matchMedia('(pointer: fine)').matches) return;
 
     cards.forEach(card => {
@@ -428,14 +428,22 @@ async function loadEmployeeData() {
   const userKey = urlParams.get('user');
   let companyServices = [];
 
+  const isPresenter = urlParams.get('qr') === 'true';
+  const overlay = document.getElementById('visiting-card-overlay');
+
   if (!userKey) {
     document.getElementById('profile-view').style.display = 'none';
     document.getElementById('directory-view').style.display = 'block';
+    if (overlay) overlay.style.display = 'none';
     renderDirectory();
     return;
   } else {
     document.getElementById('profile-view').style.display = 'block';
     document.getElementById('directory-view').style.display = 'none';
+    if (overlay) {
+      overlay.style.display = isPresenter ? 'none' : 'flex';
+      overlay.classList.remove('exit');
+    }
   }
 
   try {
@@ -499,6 +507,16 @@ async function loadEmployeeData() {
   document.getElementById('profile-name').textContent = activeEmployee.fullName;
   document.getElementById('profile-designation').textContent = activeEmployee.designation;
   document.getElementById('profile-bio').textContent = activeEmployee.bio;
+
+  // Populate Silver Visiting Card Overlay
+  const silverName = document.getElementById('silver-card-name');
+  if (silverName) silverName.textContent = activeEmployee.fullName;
+  const silverDesignation = document.getElementById('silver-card-designation');
+  if (silverDesignation) silverDesignation.textContent = activeEmployee.designation;
+  const silverPhone = document.getElementById('silver-card-phone');
+  if (silverPhone) silverPhone.textContent = activeEmployee.phoneFormatted;
+  const silverEmail = document.getElementById('silver-card-email');
+  if (silverEmail) silverEmail.textContent = activeEmployee.email;
 
   // 2. Profile image and initials fallback
   const img = document.getElementById('profile-img');
@@ -640,6 +658,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Load employee data first
   await loadEmployeeData();
+
+  // Initialize Silver Card Dismissal Click
+  const overlay = document.getElementById('visiting-card-overlay');
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      overlay.classList.add('exit');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 600);
+    });
+  }
 
   // Page enter
   document.body.classList.add('loaded');

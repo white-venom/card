@@ -1319,3 +1319,210 @@ body.presenter-mode .main-content {
   }
 }
 
+/* ─── Silver Visiting Card Overlay ────────────────────────── */
+.visiting-card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+  padding: var(--space-4);
+  opacity: 1;
+  visibility: visible;
+}
+
+.visiting-card-overlay.exit {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.visiting-card-overlay.exit .silver-physical-card {
+  transform: scale(0.85) rotateX(15deg) translateY(-20px);
+  opacity: 0;
+}
+
+.visiting-card-container {
+  perspective: 1200px;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  justify-content: center;
+}
+
+.silver-physical-card {
+  width: 100%;
+  aspect-ratio: 1.68 / 1; /* Standard business card ratio */
+  background: linear-gradient(
+    135deg, 
+    #f8fafc 0%, 
+    #e2e8f0 20%, 
+    #cbd5e1 40%, 
+    #f1f5f9 60%, 
+    #94a3b8 80%, 
+    #cbd5e1 100%
+  );
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: cardPulse 4s ease-in-out infinite alternate;
+}
+
+.silver-physical-card:hover {
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Brushed metal effect */
+.silver-physical-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.08) 50%, 
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.silver-physical-card:hover::after {
+  transform: skewX(-25deg) translateX(400px);
+}
+
+.silver-card-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  z-index: 2;
+  position: relative;
+}
+
+.silver-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.silver-card-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.silver-logo-symbol {
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--coral), var(--purple));
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.silver-logo-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #0f172a;
+  text-transform: uppercase;
+}
+
+.silver-card-chip {
+  width: 32px;
+  height: 24px;
+  color: #94a3b8;
+  opacity: 0.85;
+}
+
+.silver-card-body {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.silver-card-name {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.silver-card-designation {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.silver-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  padding-top: var(--space-3);
+}
+
+.silver-card-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.silver-contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.silver-tap-hint {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+  animation: pulseHint 1.5s infinite alternate;
+}
+
+@keyframes pulseHint {
+  from { opacity: 0.4; }
+  to { opacity: 0.95; }
+}
+
+@keyframes cardPulse {
+  from {
+    transform: rotateY(-3deg) rotateX(1deg);
+  }
+  to {
+    transform: rotateY(3deg) rotateX(-1deg);
+  }
+}
+

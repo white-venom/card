@@ -90,6 +90,53 @@
 
 <body>
   <!-- ═══════════════════════════════════════════════════════
+       SILVER VISITING CARD OVERLAY (Visitor Mode)
+  ════════════════════════════════════════════════════════════ -->
+  <div id="visiting-card-overlay" class="visiting-card-overlay" style="display: none;">
+    <div class="visiting-card-container">
+      <article class="silver-physical-card">
+        <div class="silver-card-shine"></div>
+        <div class="silver-card-inner">
+          <div class="silver-card-header">
+            <div class="silver-card-logo">
+              <span class="silver-logo-symbol">X</span>
+              <span class="silver-logo-text">Xenelasia</span>
+            </div>
+            <div class="silver-card-chip">
+              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="15" y="15" width="70" height="70" rx="10" stroke="currentColor" stroke-width="4"/>
+                <rect x="30" y="30" width="40" height="40" rx="6" fill="currentColor" opacity="0.8"/>
+                <line x1="15" y1="50" x2="30" y2="50" stroke="currentColor" stroke-width="4"/>
+                <line x1="70" y1="50" x2="85" y2="50" stroke="currentColor" stroke-width="4"/>
+                <line x1="50" y1="15" x2="50" y2="30" stroke="currentColor" stroke-width="4"/>
+                <line x1="50" y1="70" x2="50" y2="85" stroke="currentColor" stroke-width="4"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="silver-card-body">
+            <h2 id="silver-card-name" class="silver-card-name">Kartik Verma</h2>
+            <p id="silver-card-designation" class="silver-card-designation">Tech Expert</p>
+          </div>
+          
+          <div class="silver-card-footer">
+            <div class="silver-card-contact">
+              <div class="silver-contact-item">
+                <span class="silver-icon">📞</span>
+                <span id="silver-card-phone">+91 81263 38976</span>
+              </div>
+              <div class="silver-contact-item">
+                <span class="silver-icon">✉️</span>
+                <span id="silver-card-email">kartik.verma.cs@gmail.com</span>
+              </div>
+            </div>
+            <div class="silver-tap-hint">Tap to Open Card</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+  <!-- ═══════════════════════════════════════════════════════
        ANIMATED BACKGROUND LAYER
   ════════════════════════════════════════════════════════════ -->
   <div class="bg-canvas" aria-hidden="true">
