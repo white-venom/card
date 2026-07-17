@@ -441,8 +441,7 @@ async function loadEmployeeData() {
     document.getElementById('profile-view').style.display = 'block';
     document.getElementById('directory-view').style.display = 'none';
     if (overlay) {
-      overlay.style.display = isPresenter ? 'none' : 'flex';
-      overlay.classList.remove('exit');
+      overlay.style.display = 'none';
     }
   }
 
