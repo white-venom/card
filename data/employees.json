@@ -160,6 +160,43 @@
       ],
       "profileImg": "assets/profile/sujeet.jpg",
       "initials": "SK"
+    },
+    "anshu kumar": {
+      "firstName": "Anshu Kumar",
+      "lastName": "Kansal",
+      "fullName": "Anshu Kumar Kansal",
+      "designation": "Procurement Architect",
+      "company": "Xenelasia Consultancy",
+      "bio": "Helping businesses leverage technology, AI, automation, and digital transformation in Procurement Architect strategies.",
+      "phone": "8010115618",
+      "phoneFormatted": "+91 80101 15618",
+      "email": "xcplllp@gmail.com",
+      "website": "xcplllp.com",
+      "linkedin": "https://www.linkedin.com/in/anshu kumar-kansal-xcp/",
+      "whatsapp": "https://wa.me/8010115618",
+      "address": {
+        "street": "1908, Iconic Corenthum Tower",
+        "city": "Sector 62, Noida",
+        "state": "Uttar Pradesh",
+        "country": "India",
+        "postal": "201309"
+      },
+      "skills": [
+        {
+          "icon": "⚡",
+          "name": "Enterprise Architecture & System Design"
+        },
+        {
+          "icon": "⚡",
+          "name": "Strategic Sourcing"
+        },
+        {
+          "icon": "⚡",
+          "name": ". Financial Acumen"
+        }
+      ],
+      "profileImg": "assets/profile/anshu kumar.jpg",
+      "initials": "AK"
     }
   }
 }
