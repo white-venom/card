@@ -1278,3 +1278,44 @@ body:not(.keyboard-nav) :focus { outline: none; }
   }
 }
 
+/* ─── Presenter Mode (when ?qr=true is in URL) ──────────────── */
+body.presenter-mode .section.reveal:not([aria-labelledby="qr-heading"]),
+body.presenter-mode .site-footer {
+  display: none !important;
+}
+
+body.presenter-mode .main-content {
+  padding-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  body.presenter-mode .main-content {
+    max-width: 960px;
+    padding-top: 100px;
+  }
+  
+  body.presenter-mode #profile-view {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-6);
+    align-items: stretch;
+    justify-content: center;
+  }
+  
+  body.presenter-mode #profile-view > .section {
+    flex: 1;
+    margin-top: 0;
+  }
+  
+  /* Make both cards look equal height and unified */
+  body.presenter-mode .hero-card,
+  body.presenter-mode .qr-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+  }
+}
+

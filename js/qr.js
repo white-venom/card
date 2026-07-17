@@ -22,11 +22,13 @@ const QRManager = (() => {
     const qrSection = document.querySelector('[aria-labelledby="qr-heading"]');
 
     if (!showQr) {
+      document.body.classList.remove('presenter-mode');
       if (qrSection) {
         qrSection.style.display = 'none';
       }
       return;
     } else {
+      document.body.classList.add('presenter-mode');
       if (qrSection) {
         qrSection.style.display = 'block';
       }

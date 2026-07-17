@@ -632,6 +632,12 @@ async function loadEmployeeData() {
 
 /* ─── Initialise Everything ─────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check for presenter mode early to prevent layout flash
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('qr') === 'true') {
+    document.body.classList.add('presenter-mode');
+  }
+
   // Load employee data first
   await loadEmployeeData();
 
